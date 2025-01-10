@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  namespace: yuval-skillup
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend-container
+        image: 253650698585.dkr.ecr.us-east-1.amazonaws.com/youval.mejerowicz-skillup-ecr:backend
+        ports:
+        - containerPort: 8080
+        env:
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: jwt-secret
+              key: JWT_SECRET
+        #
+        #command: ["/bin/sh", "-c", "while true; do sleep 30; done"]
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "250m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+        volumeMounts:
+        - name: datasource-config-volume
+          mountPath: /app/application.properties
+          subPath: application.properties
+      imagePullSecrets:
+      - name: ecr-registry-secret
+      volumes:
+      - name: datasource-config-volume
+        configMap:
+          name: datasource-config

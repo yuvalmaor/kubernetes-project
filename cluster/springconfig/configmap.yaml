@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: datasource-config
+  namespace: yuval-skillup
+data:
+  application.properties: |
+    spring.datasource.url=jdbc:sqlite:/app/dev.db
+    spring.datasource.driver-class-name=org.sqlite.JDBC
+    spring.datasource.username=
+    spring.datasource.password=
